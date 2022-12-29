@@ -132,30 +132,35 @@ void AppendArray(std::shared_ptr<arrow::Array> array_data, K k_array, size_t& in
   }
   case arrow::Type::UINT8:
   {
+    // krr((S)"UINT8");
     auto uint8_array = std::static_pointer_cast<arrow::UInt8Array>(array_data);
     memcpy(kG(k_array), uint8_array->raw_values(), uint8_array->length() * sizeof(arrow::UInt8Array::value_type));
     break;
   }
   case arrow::Type::INT8:
   {
+    // krr((S)"INT8");
     auto int8_array = std::static_pointer_cast<arrow::Int8Array>(array_data);
     memcpy(kG(k_array), int8_array->raw_values(), int8_array->length() * sizeof(arrow::Int8Array::value_type));
     break;
   }
   case arrow::Type::UINT16:
   {
+    // krr((S)"UINT16");
     auto uint16_array = std::static_pointer_cast<arrow::UInt16Array>(array_data);
     memcpy(kH(k_array), uint16_array->raw_values(), uint16_array->length() * sizeof(arrow::UInt16Array::value_type));
     break;
   }
   case arrow::Type::INT16:
   {
+    // krr((S)"INT16");
     auto int16_array = std::static_pointer_cast<arrow::Int16Array>(array_data);
     memcpy(kH(k_array), int16_array->raw_values(), int16_array->length() * sizeof(arrow::Int16Array::value_type));
     break;
   }
   case arrow::Type::UINT32:
   {
+    // krr((S)"UINT32");
     auto uint32_array = std::static_pointer_cast<arrow::UInt32Array>(array_data);
     memcpy(kI(k_array), uint32_array->raw_values(), uint32_array->length() * sizeof(arrow::UInt32Array::value_type));
     break;
@@ -163,17 +168,26 @@ void AppendArray(std::shared_ptr<arrow::Array> array_data, K k_array, size_t& in
   case arrow::Type::INT32:
   {
     auto int32_array = std::static_pointer_cast<arrow::Int32Array>(array_data);
-    memcpy(kI(k_array), int32_array->raw_values(), int32_array->length() * sizeof(arrow::Int32Array::value_type));
+    for (auto i = 0; i < int32_array->length(); ++i) {  
+      // auto integer32 = arrow::int32(int32_array->Value(i)); // Doesn't work because it can't take arguments
+      auto integer32 = int32_array->Value(i);
+      // K k_int = ktn(KG, 16); // Can change the second argument to 16 or 32 or 64 to test
+      // integer32.ToBytes(kG(k_int));
+      kI(k_array)[index++] = integer32; // Might have to change kI? - Check back on Decimal way 
+    }
+    // memcpy(kI(k_array), int32_array->raw_values(), int32_array->length() * sizeof(arrow::Int32Array::value_type));
     break;
   }
   case arrow::Type::UINT64:
   {
+    // krr((S)"UINT64");
     auto uint64_array = std::static_pointer_cast<arrow::UInt64Array>(array_data);
     memcpy(kJ(k_array), uint64_array->raw_values(), uint64_array->length() * sizeof(arrow::UInt64Array::value_type));
     break;
   }
   case arrow::Type::INT64:
   {
+    // krr((S)"INT64");
     auto int64_array = std::static_pointer_cast<arrow::Int64Array>(array_data);
     memcpy(kJ(k_array), int64_array->raw_values(), int64_array->length() * sizeof(arrow::Int64Array::value_type));
     break;
